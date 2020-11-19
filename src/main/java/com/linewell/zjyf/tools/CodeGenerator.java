@@ -33,9 +33,9 @@ public class CodeGenerator {
     private static String basePackage = "com.linewell.zjyf.model";
     // 数据源
     private static String driverName = "com.mysql.cj.jdbc.Driver";
-    private static String url = "jdbc:mysql://192.168.206.183:3306/archives_center_conform?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&useSSL=false&allowMultiQueries=true";
+    private static String url = "jdbc:mysql://127.0.0.1:3306/archives_center_conform?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&useSSL=false&allowMultiQueries=true";
     private static String username = "admin";
-    private static String password = "linewell@123";
+    private static String password = "admin@123";
 
 
     public static void main(String[] args) {

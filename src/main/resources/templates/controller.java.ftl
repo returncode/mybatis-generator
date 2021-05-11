@@ -13,9 +13,7 @@ import ${superControllerClassPackage};
 </#if>
 
 /**
- * <p>
  * ${table.comment!} 控制器
- * </p>
  *
  * @author ${author}
  * @since ${date}

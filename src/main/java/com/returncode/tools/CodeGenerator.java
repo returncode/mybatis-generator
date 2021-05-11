@@ -1,4 +1,4 @@
-package com.linewell.zjyf.tools;
+package com.returncode.tools;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
@@ -30,13 +30,13 @@ public class CodeGenerator {
     // 项目路径
     private static String projectPath = System.getProperty("user.dir");
     // 基本包名
-    private static String basePackage = "com.linewell.zjyf.model";
+    private static String basePackage = "com.returncode.package";
+    private static String baseDir = "com/returncode/package";
     // 数据源
     private static String driverName = "com.mysql.cj.jdbc.Driver";
-    private static String url = "jdbc:mysql://127.0.0.1:3306/archives_center_conform?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&useSSL=false&allowMultiQueries=true";
-    private static String username = "admin";
-    private static String password = "admin@123";
-
+    private static String url = "jdbc:mysql://127.0.0.1:3306/database?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&useSSL=false";
+    private static String username = "root";
+    private static String password = "root";
 
     public static void main(String[] args) {
 
@@ -105,13 +105,13 @@ public class CodeGenerator {
         focList.add(new FileOutConfig("/templates/mapper.xml.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
-                return projectPath + "/src/main/resources/mapper/" + moduleName + "/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
+                return projectPath + "/src/main/resources/mapper/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
             }
         });
         focList.add(new FileOutConfig("/templates/entity.java.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
-                return projectPath + "/src/main/java/com/linewell/zjyf/model/" + moduleName + "/entity/pojo/" + tableInfo.getEntityName()+"DO" + StringPool.DOT_JAVA;
+                return projectPath + "/src/main/java/" + baseDir + "/" + moduleName + "/entity/pojo/" + tableInfo.getEntityName() + "DO" + StringPool.DOT_JAVA;
             }
         });
         cfg.setFileOutConfigList(focList);

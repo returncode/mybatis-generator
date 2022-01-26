@@ -9,7 +9,7 @@
 </#if>
 <#if baseResultMap>
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="${package.Entity}.pojo.${entity}DO">
+    <resultMap id="BaseResultMap" type="${package.Entity}.${entity}DO">
 <#list table.fields as field>
 <#if field.keyFlag><#--生成主键排在第一位-->
         <id column="${field.name}" property="${field.propertyName}" />
@@ -29,9 +29,9 @@
 <#if baseColumnList>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-<#list table.commonFields as field>
-        ${field.columnName},
-</#list>
+    <#list table.commonFields as field>
+            ${field.columnName},
+    </#list>
         ${table.fieldNames}
     </sql>
 

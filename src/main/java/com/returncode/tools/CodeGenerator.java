@@ -30,13 +30,13 @@ public class CodeGenerator {
     // 项目路径
     private static String projectPath = System.getProperty("user.dir");
     // 基本包名
-    private static String basePackage = "com.returncode.package";
-    private static String baseDir = "com/returncode/package";
+    private static String basePackage = "com.linewell.archives";
+    private static String baseDir = "com/linewell/archives";
     // 数据源
     private static String driverName = "com.mysql.cj.jdbc.Driver";
-    private static String url = "jdbc:mysql://127.0.0.1:3306/database?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&useSSL=false";
+    private static String url = "jdbc:mysql://127.0.0.1:3306/test?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&useSSL=false";
     private static String username = "root";
-    private static String password = "root";
+    private static String password = "123456@mysql";
 
     public static void main(String[] args) {
 
@@ -105,13 +105,13 @@ public class CodeGenerator {
         focList.add(new FileOutConfig("/templates/mapper.xml.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
-                return projectPath + "/src/main/resources/mapper/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
+                return projectPath + "/src/main/resources/mapper/"+ moduleName + "/"+ tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
             }
         });
         focList.add(new FileOutConfig("/templates/entity.java.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
-                return projectPath + "/src/main/java/" + baseDir + "/" + moduleName + "/entity/pojo/" + tableInfo.getEntityName() + "DO" + StringPool.DOT_JAVA;
+                return projectPath + "/src/main/java/" + baseDir + "/" + moduleName + "/entity/" + tableInfo.getEntityName() + "PO" + StringPool.DOT_JAVA;
             }
         });
         cfg.setFileOutConfigList(focList);
@@ -139,7 +139,7 @@ public class CodeGenerator {
                         .setRestControllerStyle(true)
                         .setInclude(scanner("表名，多个英文逗号分割").split(","))
                         .setControllerMappingHyphenStyle(true)
-                        .setTablePrefix(scanner("要过滤的表前缀") + "_")
+                        .setTablePrefix(scanner("要过滤的表前缀"))
                 //逻辑删除属性名称
                 //.setLogicDeleteFieldName("delete_flag")
         );

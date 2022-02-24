@@ -43,7 +43,7 @@ public class ${entity} extends ${superEntityClass}<#if activeRecord><${entity}><
 <#elseif activeRecord>
 public class ${entity} extends Model<${entity}> {
 <#else>
-public class ${entity}DO implements Serializable {
+public class ${entity}PO implements Serializable {
 </#if>
 
 <#if entitySerialVersionUID>

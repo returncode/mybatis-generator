@@ -1,26 +1,15 @@
 package com.returncode.tools;
 
-import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.baomidou.mybatisplus.generator.AutoGenerator;
-import com.baomidou.mybatisplus.generator.InjectionConfig;
+import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
-import com.baomidou.mybatisplus.generator.config.FileOutConfig;
-import com.baomidou.mybatisplus.generator.config.GlobalConfig;
-import com.baomidou.mybatisplus.generator.config.PackageConfig;
-import com.baomidou.mybatisplus.generator.config.StrategyConfig;
-import com.baomidou.mybatisplus.generator.config.TemplateConfig;
-import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
-import com.baomidou.mybatisplus.generator.config.po.TableInfo;
-import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
-import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
-import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
+import com.baomidou.mybatisplus.generator.config.OutputFile;
+import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 import java.util.Scanner;
 
 /**
@@ -31,123 +20,54 @@ public class CodeGenerator {
     private static String projectPath = System.getProperty("user.dir");
     // 基本包名
     private static String basePackage = "com.linewell.archives";
-    private static String baseDir = "com/linewell/archives";
     // 数据源
-    private static String driverName = "com.mysql.cj.jdbc.Driver";
-    private static String url = "jdbc:mysql://127.0.0.1:3306/test?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&useSSL=false";
+    private static String url = "jdbc:mysql://127.0.0.1:3306/data?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&useSSL=false";
     private static String username = "root";
     private static String password = "123456@mysql";
+    // 数据源配置
+    private static final DataSourceConfig.Builder DATA_SOURCE_CONFIG = new DataSourceConfig.Builder(url, username, password);
 
     public static void main(String[] args) {
+        FastAutoGenerator.create(DATA_SOURCE_CONFIG)
+                .globalConfig(builder -> {
+                    builder.author(scanner("开发人员名称"))
+                            .fileOverride()
+                            .dateType(DateType.ONLY_DATE)
+                            .outputDir(projectPath + "/src/main/java");
+                })
+                .packageConfig(builder -> {
+                    final String moduleName = scanner("模块名");
+                    builder.parent(basePackage)
+                            .moduleName(moduleName)
+                            .pathInfo(Collections.singletonMap(OutputFile.mapperXml, projectPath + "/src/main/resources/mapper/" + moduleName));
+                })
+                .strategyConfig(builder -> {
+                    builder.addInclude(scanner("表名，多个英文逗号分割").split(","))
+                            .addTablePrefix(scanner("要过滤的表前缀")+"_")
+                            .controllerBuilder()
+                                .enableRestStyle()
+                            .entityBuilder()
+                                .formatFileName("%sPO")
+                            .mapperBuilder()
+                                .enableBaseResultMap()
+                                .enableBaseColumnList();
 
-        AutoGenerator mpg = new AutoGenerator();
-
-        /**
-         * 全局配置
-         */
-        mpg.setGlobalConfig(new GlobalConfig()
-                        //生成文件的输出目录
-                        .setOutputDir(projectPath + "/src/main/java")
-                        //是否覆盖已有文件
-                        .setFileOverride(false)
-                        //开发人员
-                        .setAuthor(scanner("开发人员名称"))
-                        //是否打开输出目录
-                        .setOpen(false)
-                        //开启 swagger2 模式
-                        .setSwagger2(false)
-                        //开启 BaseResultMap
-                        .setBaseResultMap(true)
-                        //开启 baseColumnList
-                        .setBaseColumnList(true)
-                //指定生成的主键的ID类型
-                //.setIdType(IdType.UUID)
-        );
-
-        /**
-         * 数据源配置
-         */
-        mpg.setDataSource(new DataSourceConfig()
-                .setDbType(DbType.MYSQL)
-                .setDriverName(driverName)
-                .setUrl(url)
-                .setUsername(username)
-                .setPassword(password)
-                .setTypeConvert(new MySqlTypeConvert() {
-                    // 自定义数据库表字段类型转换【可选】
-                    @Override
-                    public IColumnType processTypeConvert(GlobalConfig globalConfig, String fieldType) {
-                        if (fieldType.toLowerCase().contains("datetime")) {
-                            return DbColumnType.DATE;
-                        }
-                        return super.processTypeConvert(globalConfig, fieldType);
-                    }
-                }));
-
-        /**
-         * 包配置
-         */
-        final String moduleName = scanner("模块名");
-        mpg.setPackageInfo(new PackageConfig()
-                .setModuleName(moduleName)
-                .setParent(basePackage)
-        );
-
-        /**
-         * 自定义配置
-         */
-        InjectionConfig cfg = new InjectionConfig() {
-            @Override
-            public void initMap() {
-            }
-        };
-        List<FileOutConfig> focList = new ArrayList<FileOutConfig>();
-        focList.add(new FileOutConfig("/templates/mapper.xml.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return projectPath + "/src/main/resources/mapper/"+ moduleName + "/"+ tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
-            }
-        });
-        focList.add(new FileOutConfig("/templates/entity.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return projectPath + "/src/main/java/" + baseDir + "/" + moduleName + "/entity/" + tableInfo.getEntityName() + "PO" + StringPool.DOT_JAVA;
-            }
-        });
-        cfg.setFileOutConfigList(focList);
-        mpg.setCfg(cfg);
-
-        /**
-         * 模板配置
-         */
-        mpg.setTemplateEngine(new FreemarkerTemplateEngine());
-        mpg.setTemplate(new TemplateConfig()
-                .setController("templates/controller.java")
-                .setMapper("templates/mapper.java")
-                .setService("templates/service.java")
-                .setServiceImpl("templates/serviceImpl.java")
-                .setEntity(null)
-                .setXml(null));
-
-        /**
-         * 策略配置
-         */
-        mpg.setStrategy(new StrategyConfig()
-                        .setNaming(NamingStrategy.underline_to_camel)
-                        .setColumnNaming(NamingStrategy.underline_to_camel)
-                        //生成 @RestController 控制器
-                        .setRestControllerStyle(true)
-                        .setInclude(scanner("表名，多个英文逗号分割").split(","))
-                        .setControllerMappingHyphenStyle(true)
-                        .setTablePrefix(scanner("要过滤的表前缀"))
-                //逻辑删除属性名称
-                //.setLogicDeleteFieldName("delete_flag")
-        );
-
-        /**
-         * 执行生成
-         */
-        mpg.execute();
+                })
+                .templateEngine(new FreemarkerTemplateEngine())
+                .templateConfig(builder -> {
+                    builder.controller("templates/controller.java")
+                            .service("templates/service.java")
+                            .serviceImpl("templates/serviceImpl.java")
+                            .entity("templates/entity.java")
+                            .mapper("templates/mapper.java")
+                            .mapperXml("/templates/mapper.xml");
+                })
+                .injectionConfig(builder -> {
+                    builder.beforeOutputFile((tableInfo, stringObjectMap) -> {
+                        tableInfo.setConvert(false).getImportPackages().remove(TableName.class.getCanonicalName());
+                    });
+                })
+                .execute();
     }
 
 

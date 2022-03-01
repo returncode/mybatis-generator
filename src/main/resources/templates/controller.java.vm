@@ -1,37 +1,36 @@
 package ${package.Controller};
 
-
 import org.springframework.web.bind.annotation.RequestMapping;
-
-<#if restControllerStyle>
+#if(${restControllerStyle})
 import org.springframework.web.bind.annotation.RestController;
-<#else>
+#else
 import org.springframework.stereotype.Controller;
-</#if>
-<#if superControllerClassPackage??>
+#end
+#if(${superControllerClassPackage})
 import ${superControllerClassPackage};
-</#if>
+#end
 
 /**
- * ${table.comment!} 控制器
+ * $!{table.comment} 前端控制器
  *
  * @author ${author}
  * @since ${date}
  */
-<#if restControllerStyle>
+#if(${restControllerStyle})
 @RestController
-<#else>
+#else
 @Controller
-</#if>
-@RequestMapping("<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>")
-<#if kotlin>
-class ${table.controllerName}<#if superControllerClass??> : ${superControllerClass}()</#if>
-<#else>
-<#if superControllerClass??>
+#end
+@RequestMapping("#if(${package.ModuleName})/${package.ModuleName}#end")
+#if(${kotlin})
+class ${table.controllerName}#if(${superControllerClass}) : ${superControllerClass}()#end
+
+#else
+#if(${superControllerClass})
 public class ${table.controllerName} extends ${superControllerClass} {
-<#else>
+#else
 public class ${table.controllerName} {
-</#if>
+#end
 
 }
-</#if>
+#end

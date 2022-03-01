@@ -13,6 +13,7 @@
 #foreach($field in ${table.fields})
 #if(${field.keyFlag})##生成主键排在第一位
         <id column="${field.name}" jdbcType="${field.metaInfo.jdbcType}" property="${field.propertyName}" />
+    #set($pkField = ${field})
 #end
 #end
 #foreach($field in ${table.commonFields})##生成公共字段
@@ -36,4 +37,18 @@
     </sql>
 
 #end
+    <!--根据unid查询-->
+    <select id="selectByUnid" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />
+        from $!table.name
+        where $!pkField.name = #{$!pkField.propertyName,jdbcType=$!pkField.metaInfo.jdbcType}
+    </select>
+
+    <!--新增-->
+    #set( $new = "
+            " )
+    <insert id="insert" parameterType="${package.Entity}.${entity}">
+        insert into $!table.name ( #foreach($column in $table.fields)$!column.name#if($foreach.hasNext), #if(${foreach.count}%5==0)$new#end#end#end )
+        values ( #foreach($column in $table.fields)#{$!column.propertyName,jdbcType=$!column.metaInfo.jdbcType}#if($foreach.hasNext), #if(${foreach.count}%3==0)$new#end#end#end )
+    </insert>
 </mapper>

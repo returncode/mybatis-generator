@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
-import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+import com.baomidou.mybatisplus.generator.engine.VelocityTemplateEngine;
 
 import java.util.Collections;
 import java.util.Scanner;
@@ -43,17 +43,18 @@ public class CodeGenerator {
                 })
                 .strategyConfig(builder -> {
                     builder.addInclude(scanner("表名，多个英文逗号分割").split(","))
-                            .addTablePrefix(scanner("要过滤的表前缀")+"_")
+                            .addTablePrefix(scanner("要过滤的表前缀") + "_")
                             .controllerBuilder()
                                 .enableRestStyle()
                             .entityBuilder()
                                 .formatFileName("%sPO")
                             .mapperBuilder()
                                 .enableBaseResultMap()
-                                .enableBaseColumnList();
+                                .enableBaseColumnList()
+                                .enableMapperAnnotation();
 
                 })
-                .templateEngine(new FreemarkerTemplateEngine())
+                .templateEngine(new VelocityTemplateEngine())
                 .templateConfig(builder -> {
                     builder.controller("templates/controller.java")
                             .service("templates/service.java")

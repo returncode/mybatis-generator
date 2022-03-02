@@ -33,7 +33,11 @@
 #foreach($field in ${table.commonFields})
         ${field.columnName},
 #end
-        ${table.fieldNames}
+        ##${table.fieldNames}
+#set( $newline = "
+        " )
+        #foreach($column in $table.fields)$!column.name#if($foreach.hasNext), #if(${foreach.count}%5==0)$newline#end#end#end
+
     </sql>
 
 #end
@@ -45,10 +49,29 @@
     </select>
 
     <!--新增-->
-    #set( $new = "
+    #set( $newline = "
             " )
     <insert id="insert" parameterType="${package.Entity}.${entity}">
-        insert into $!table.name ( #foreach($column in $table.fields)$!column.name#if($foreach.hasNext), #if(${foreach.count}%5==0)$new#end#end#end )
-        values ( #foreach($column in $table.fields)#{$!column.propertyName,jdbcType=$!column.metaInfo.jdbcType}#if($foreach.hasNext), #if(${foreach.count}%3==0)$new#end#end#end )
+        insert into $!table.name ( #foreach($column in $table.fields)$!column.name#if($foreach.hasNext), #if(${foreach.count}%5==0)$newline#end#end#end )
+        values ( #foreach($column in $table.fields)#{$!column.propertyName,jdbcType=$!column.metaInfo.jdbcType}#if($foreach.hasNext), #if(${foreach.count}%3==0)$newline#end#end#end )
     </insert>
+
+    <!--根据unid更新-->
+    <update id="updateByUnid" parameterType="${package.Entity}.${entity}">
+        update $!table.name
+        <set>
+        #foreach($column in $table.fields)#if(!${column.keyFlag})
+            <if test="$!column.propertyName != null#if($column.columnType.type.equals("String")) and $!column.propertyName != ''#end">
+                $!column.name = #{$!column.propertyName,jdbcType=$!column.metaInfo.jdbcType},
+            </if>
+        #end#end
+        </set>
+        where $!pkField.name = #{$!pkField.propertyName,jdbcType=$!pkField.metaInfo.jdbcType}
+    </update>
+
+    <!--根据unid删除-->
+    <delete id="deleteByUnid" parameterType="java.lang.Long">
+        delete from $!table.name
+        where $!pkField.name = #{$!pkField.propertyName,jdbcType=$!pkField.metaInfo.jdbcType}
+    </delete>
 </mapper>

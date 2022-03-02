@@ -1,5 +1,6 @@
 package ${package.Mapper};
 
+import ${package.Entity}.${entity};
 #if(${mapperAnnotation})
 import org.apache.ibatis.annotations.Mapper;
 #end
@@ -17,6 +18,34 @@ import org.apache.ibatis.annotations.Mapper;
 interface ${table.mapperName} : ${superMapperClass}<${entity}>
 #else
 public interface ${table.mapperName} {
+
+    /**
+     * 根据unid查询$!{table.comment}
+     * @param unid $!{table.comment}ID
+     * @return $!{table.comment}数据对象
+     */
+    ${entity} selectByUnid(Long unid);
+
+    /**
+     * 新增
+     * @param record $!{table.comment}数据对象
+     * @return 影响行数
+     */
+    int insert(${entity} record);
+
+    /**
+     * 根据unid更新
+     * @param record $!{table.comment}数据对象
+     * @return 影响行数
+     */
+    int updateByUnid(${entity} record);
+
+    /**
+     * 根据unid删除
+     * @param unid $!{table.comment}ID
+     * @return 影响行数
+     */
+    int deleteByUnid(Long unid);
 
 }
 #end

@@ -19,11 +19,11 @@ public class CodeGenerator {
     // 项目路径
     private static String projectPath = System.getProperty("user.dir");
     // 基本包名
-    private static String basePackage = "com.linewell.archives";
+    private static String basePackage = "com.jingtoo.dzda";
     // 数据源
-    private static String url = "jdbc:mysql://127.0.0.1:3306/data?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&useSSL=false";
+    private static String url = "jdbc:mysql://192.168.0.136:3306/dzda_gz_yh?useSSL=false";
     private static String username = "root";
-    private static String password = "123456@mysql";
+    private static String password = "root";
     // 数据源配置
     private static final DataSourceConfig.Builder DATA_SOURCE_CONFIG = new DataSourceConfig.Builder(url, username, password);
 

@@ -20,11 +20,18 @@ interface ${table.mapperName} : ${superMapperClass}<${entity}>
 public interface ${table.mapperName} {
 
     /**
-     * 根据unid查询$!{table.comment}
-     * @param unid $!{table.comment}ID
+     * 根据主键查询$!{table.comment}数量
+     * @param primarykey $!{table.comment}ID
+     * @return $!{table.comment}数量
+     */
+    int countByPrimarykey(String primarykey);
+
+    /**
+     * 根据主键查询$!{table.comment}数据
+     * @param primarykey $!{table.comment}ID
      * @return $!{table.comment}数据对象
      */
-    ${entity} selectByUnid(Long unid);
+    ${entity} selectByPrimarykey(Long primarykey);
 
     /**
      * 新增
@@ -34,18 +41,18 @@ public interface ${table.mapperName} {
     int insert(${entity} record);
 
     /**
-     * 根据unid更新
+     * 根据主键更新
      * @param record $!{table.comment}数据对象
      * @return 影响行数
      */
-    int updateByUnid(${entity} record);
+    int updateByPrimarykey(${entity} record);
 
     /**
-     * 根据unid删除
-     * @param unid $!{table.comment}ID
+     * 根据主键删除
+     * @param primarykey $!{table.comment}ID
      * @return 影响行数
      */
-    int deleteByUnid(Long unid);
+    int deleteByPrimarykey(Long primarykey);
 
 }
 #end

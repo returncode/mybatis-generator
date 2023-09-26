@@ -28,7 +28,7 @@
 
 #end
 #if(${baseColumnList})
-    <!-- 通用查询结果列 -->
+    <!-- 通用查询数据列 -->
     <sql id="Base_Column_List">
 #foreach($field in ${table.commonFields})
         ${field.columnName},
@@ -41,8 +41,15 @@
     </sql>
 
 #end
-    <!--根据unid查询-->
-    <select id="selectByUnid" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--根据主键查询数量-->
+    <select id="countByPrimarykey" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(0)
+        from $!table.name
+        where $!pkField.name = #{$!pkField.propertyName,jdbcType=$!pkField.metaInfo.jdbcType}
+    </select>
+
+    <!--根据主键查询数据-->
+    <select id="selectByPrimarykey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select <include refid="Base_Column_List" />
         from $!table.name
         where $!pkField.name = #{$!pkField.propertyName,jdbcType=$!pkField.metaInfo.jdbcType}
@@ -56,8 +63,8 @@
         values ( #foreach($column in $table.fields)#{$!column.propertyName,jdbcType=$!column.metaInfo.jdbcType}#if($foreach.hasNext), #if(${foreach.count}%3==0)$newline#end#end#end )
     </insert>
 
-    <!--根据unid更新-->
-    <update id="updateByUnid" parameterType="${package.Entity}.${entity}">
+    <!--根据主键更新-->
+    <update id="updateByPrimarykey" parameterType="${package.Entity}.${entity}">
         update $!table.name
         <set>
         #foreach($column in $table.fields)#if(!${column.keyFlag})
@@ -69,8 +76,8 @@
         where $!pkField.name = #{$!pkField.propertyName,jdbcType=$!pkField.metaInfo.jdbcType}
     </update>
 
-    <!--根据unid删除-->
-    <delete id="deleteByUnid" parameterType="java.lang.Long">
+    <!--根据主键删除-->
+    <delete id="deleteByPrimarykey" parameterType="java.lang.String">
         delete from $!table.name
         where $!pkField.name = #{$!pkField.propertyName,jdbcType=$!pkField.metaInfo.jdbcType}
     </delete>

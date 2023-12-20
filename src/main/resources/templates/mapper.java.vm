@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 #end
 
 /**
- * $!{table.comment} Mapper 接口
+ * $!{table.comment} Mapper接口
  *
  * @author ${author}
  * @since ${date}
@@ -18,14 +18,6 @@ import org.apache.ibatis.annotations.Mapper;
 interface ${table.mapperName} : ${superMapperClass}<${entity}>
 #else
 public interface ${table.mapperName} {
-
-    /**
-     * 根据主键查询$!{table.comment}数量
-     * @param primarykey $!{table.comment}ID
-     * @return $!{table.comment}数量
-     */
-    int countByPrimarykey(String primarykey);
-
     /**
      * 根据主键查询$!{table.comment}数据
      * @param primarykey $!{table.comment}ID

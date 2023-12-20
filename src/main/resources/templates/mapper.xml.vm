@@ -41,15 +41,8 @@
     </sql>
 
 #end
-    <!--根据主键查询数量-->
-    <select id="countByPrimarykey" parameterType="java.lang.String" resultType="java.lang.Integer">
-        select count(0)
-        from $!table.name
-        where $!pkField.name = #{$!pkField.propertyName,jdbcType=$!pkField.metaInfo.jdbcType}
-    </select>
-
     <!--根据主键查询数据-->
-    <select id="selectByPrimarykey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="selectByPrimarykey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select <include refid="Base_Column_List" />
         from $!table.name
         where $!pkField.name = #{$!pkField.propertyName,jdbcType=$!pkField.metaInfo.jdbcType}
@@ -77,7 +70,7 @@
     </update>
 
     <!--根据主键删除-->
-    <delete id="deleteByPrimarykey" parameterType="java.lang.String">
+    <delete id="deleteByPrimarykey" parameterType="java.lang.Long">
         delete from $!table.name
         where $!pkField.name = #{$!pkField.propertyName,jdbcType=$!pkField.metaInfo.jdbcType}
     </delete>

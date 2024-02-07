@@ -12,66 +12,28 @@
     <resultMap id="BaseResultMap" type="${package.Entity}.${entity}">
 #foreach($field in ${table.fields})
 #if(${field.keyFlag})##生成主键排在第一位
-        <id column="${field.name}" jdbcType="${field.metaInfo.jdbcType}" property="${field.propertyName}" />
-    #set($pkField = ${field})
+        <id column="${field.name}" property="${field.propertyName}" />
 #end
 #end
 #foreach($field in ${table.commonFields})##生成公共字段
-        <result column="${field.name}" jdbcType="${field.metaInfo.jdbcType}" property="${field.propertyName}" />
+        <result column="${field.name}" property="${field.propertyName}" />
 #end
 #foreach($field in ${table.fields})
 #if(!${field.keyFlag})##生成普通字段
-        <result column="${field.name}" jdbcType="${field.metaInfo.jdbcType}" property="${field.propertyName}" />
+        <result column="${field.name}" property="${field.propertyName}" />
 #end
 #end
     </resultMap>
 
 #end
 #if(${baseColumnList})
-    <!-- 通用查询数据列 -->
+    <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
 #foreach($field in ${table.commonFields})
         ${field.columnName},
 #end
-        ##${table.fieldNames}
-#set( $newline = "
-        " )
-        #foreach($column in $table.fields)$!column.name#if($foreach.hasNext), #if(${foreach.count}%5==0)$newline#end#end#end
-
+        ${table.fieldNames}
     </sql>
 
 #end
-    <!--根据主键查询数据-->
-    <select id="selectByPrimarykey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        select <include refid="Base_Column_List" />
-        from $!table.name
-        where $!pkField.name = #{$!pkField.propertyName,jdbcType=$!pkField.metaInfo.jdbcType}
-    </select>
-
-    <!--新增-->
-    #set( $newline = "
-            " )
-    <insert id="insert" parameterType="${package.Entity}.${entity}">
-        insert into $!table.name ( #foreach($column in $table.fields)$!column.name#if($foreach.hasNext), #if(${foreach.count}%5==0)$newline#end#end#end )
-        values ( #foreach($column in $table.fields)#{$!column.propertyName,jdbcType=$!column.metaInfo.jdbcType}#if($foreach.hasNext), #if(${foreach.count}%3==0)$newline#end#end#end )
-    </insert>
-
-    <!--根据主键更新-->
-    <update id="updateByPrimarykey" parameterType="${package.Entity}.${entity}">
-        update $!table.name
-        <set>
-        #foreach($column in $table.fields)#if(!${column.keyFlag})
-            <if test="$!column.propertyName != null#if($column.columnType.type.equals("String")) and $!column.propertyName != ''#end">
-                $!column.name = #{$!column.propertyName,jdbcType=$!column.metaInfo.jdbcType},
-            </if>
-        #end#end
-        </set>
-        where $!pkField.name = #{$!pkField.propertyName,jdbcType=$!pkField.metaInfo.jdbcType}
-    </update>
-
-    <!--根据主键删除-->
-    <delete id="deleteByPrimarykey" parameterType="java.lang.Long">
-        delete from $!table.name
-        where $!pkField.name = #{$!pkField.propertyName,jdbcType=$!pkField.metaInfo.jdbcType}
-    </delete>
 </mapper>

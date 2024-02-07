@@ -1,50 +1,26 @@
 package ${package.Mapper};
 
 import ${package.Entity}.${entity};
-#if(${mapperAnnotation})
-import org.apache.ibatis.annotations.Mapper;
+#if(${superMapperClass})
+import ${superMapperClassPackage};
+#end
+#if(${mapperAnnotationClass})
+import ${mapperAnnotationClass.name};
 #end
 
 /**
- * $!{table.comment} Mapper接口
+ * $!{table.comment}接口
  *
  * @author ${author}
  * @since ${date}
  */
-#if(${mapperAnnotation})
-@Mapper
+#if(${mapperAnnotationClass})
+@${mapperAnnotationClass.simpleName}
 #end
 #if(${kotlin})
 interface ${table.mapperName} : ${superMapperClass}<${entity}>
 #else
-public interface ${table.mapperName} {
-    /**
-     * 根据主键查询$!{table.comment}数据
-     * @param primarykey $!{table.comment}ID
-     * @return $!{table.comment}数据对象
-     */
-    ${entity} selectByPrimarykey(Long primarykey);
-
-    /**
-     * 新增
-     * @param record $!{table.comment}数据对象
-     * @return 影响行数
-     */
-    int insert(${entity} record);
-
-    /**
-     * 根据主键更新
-     * @param record $!{table.comment}数据对象
-     * @return 影响行数
-     */
-    int updateByPrimarykey(${entity} record);
-
-    /**
-     * 根据主键删除
-     * @param primarykey $!{table.comment}ID
-     * @return 影响行数
-     */
-    int deleteByPrimarykey(Long primarykey);
+public interface ${table.mapperName} #if(${superMapperClass})extends ${superMapperClass}<${entity}> #end{
 
 }
 #end

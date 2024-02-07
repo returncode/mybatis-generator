@@ -1,7 +1,6 @@
 package ${package.Controller};
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.validation.annotation.Validated;
 #if(${restControllerStyle})
 import org.springframework.web.bind.annotation.RestController;
 #else
@@ -22,8 +21,7 @@ import ${superControllerClassPackage};
 #else
 @Controller
 #end
-@RequestMapping("#if(${package.ModuleName})/${package.ModuleName}#end")
-@Validated
+@RequestMapping("#if(${package.ModuleName})/${package.ModuleName}#end/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end")
 #if(${kotlin})
 class ${table.controllerName}#if(${superControllerClass}) : ${superControllerClass}()#end
 

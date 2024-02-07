@@ -1,5 +1,5 @@
 # mybatis-generator
-mybatis-generator Mysql代码生成工具
+mybatis-generator 代码生成工具
 
 1、修改CodeGenerator下基本参数
 ```java

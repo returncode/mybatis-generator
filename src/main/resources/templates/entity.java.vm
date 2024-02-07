@@ -3,7 +3,9 @@ package ${package.Entity};
 #foreach($pkg in ${table.importPackages})
 import ${pkg};
 #end
-#if(${swagger})
+#if(${springdoc})
+import io.swagger.v3.oas.annotations.media.Schema;
+#elseif(${swagger})
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 #end
@@ -31,7 +33,9 @@ import lombok.experimental.Accessors;
 #if(${table.convert})
 @TableName("${schemaName}${table.name}")
 #end
-#if(${swagger})
+#if(${springdoc})
+@Schema(name = "${entity}", description = "$!{table.comment}")
+#elseif(${swagger})
 @ApiModel(value = "${entity}对象", description = "$!{table.comment}")
 #end
 #if(${superEntityClass})
@@ -54,7 +58,9 @@ public class ${entity} {
 #set($keyPropertyName=${field.propertyName})
 #end
 #if("$!field.comment" != "")
-  #if(${swagger})
+  #if(${springdoc})
+    @Schema(description = "${field.comment}")
+  #elseif(${swagger})
     @ApiModelProperty("${field.comment}")
   #else
     /**
@@ -93,7 +99,6 @@ public class ${entity} {
     private ${field.propertyType} ${field.propertyName};
 #end
 ## ----------  END 字段循环遍历  ----------
-
 #if(!${entityLombokModel})
 #foreach($field in ${table.fields})
   #if(${field.propertyType.equals("boolean")})
@@ -120,14 +125,14 @@ public class ${entity} {
 ## --foreach end---
 #end
 ## --end of #if(!${entityLombokModel})--
-
 #if(${entityColumnConstant})
   #foreach($field in ${table.fields})
-    public static final String ${field.name.toUpperCase()} = "${field.name}";
 
+    public static final String ${field.name.toUpperCase()} = "${field.name}";
   #end
 #end
 #if(${activeRecord})
+
     @Override
     public Serializable pkVal() {
   #if(${keyPropertyName})
@@ -136,17 +141,17 @@ public class ${entity} {
         return null;
   #end
     }
-
 #end
 #if(!${entityLombokModel})
+
     @Override
     public String toString() {
         return "${entity}{" +
   #foreach($field in ${table.fields})
     #if($!{foreach.index}==0)
-        "${field.propertyName}=" + ${field.propertyName} +
+        "${field.propertyName} = " + ${field.propertyName} +
     #else
-        ", ${field.propertyName}=" + ${field.propertyName} +
+        ", ${field.propertyName} = " + ${field.propertyName} +
     #end
   #end
         "}";

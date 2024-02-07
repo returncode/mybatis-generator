@@ -1,0 +1,22 @@
+{
+  "dataSource": {
+    "url": "jdbc:oracle:thin:@127.0.0.1:1521:orcl",
+    "username": "root",
+    "password": "root"
+  },
+  "globalConfig": {
+    "author": "wanglei",
+    "projectPath": "E:\\GitHub\\mybatis-generator",
+    "codePath": "/src/main/java"
+  },
+  "packageConfig": {
+    "packagePath": "com.returncode.samples",
+    "module": "jobs",
+    "entity": "entity.po",
+    "xmlPath": "/src/main/resources/mapper"
+  },
+  "strategyConfig": {
+    "tables": "sys_job_user,sys_job_info",
+    "tablePrefix": "sys_"
+  }
+}

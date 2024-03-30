@@ -59,7 +59,7 @@ public class CodeGenerator {
                 //设置entity包名
                 .entity(entity)
                 // 设置mapperXml生成路径
-                .pathInfo(Collections.singletonMap(OutputFile.xml, xmlPath));
+                .pathInfo(Collections.singletonMap(OutputFile.xml, xmlPath+"/"+module));
             })
             // 注入配置
             .injectionConfig(builder -> { builder
@@ -86,6 +86,7 @@ public class CodeGenerator {
                         .enableFileOverride();
                 builder.mapperBuilder()
                         .superClass("")
+                        .enableMapperAnnotation()
                         .enableFileOverride()
                         .enableBaseResultMap()
                         .enableBaseColumnList();

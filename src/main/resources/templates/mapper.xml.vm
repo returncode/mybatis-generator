@@ -36,4 +36,51 @@
     </sql>
 
 #end
+     <!--新增-->
+    #set( $newline = "
+            " )
+    <insert id="insertRecord" parameterType="${package.Entity}.${entity}">
+        insert into $!table.name ( #foreach($column in $table.fields)$!column.name#if($foreach.hasNext), #if(${foreach.count}%5==0)$newline#end#end#end )
+        values ( #foreach($column in $table.fields)#{$!column.propertyName,jdbcType=$!column.metaInfo.jdbcType}#if($foreach.hasNext), #if(${foreach.count}%3==0)$newline#end#end#end )
+    </insert>
+
+    <!--根据ID更新-->
+    <update id="updateRecord" parameterType="${package.Entity}.${entity}">
+        update $!table.name
+        <set>
+        #foreach($column in $table.fields)
+        #if(!${column.keyFlag})
+            <if test="$!column.propertyName != null#if($column.columnType.type.equals("String")) and $!column.propertyName != ''#end">
+                $!column.name = #{$!column.propertyName,jdbcType=$!column.metaInfo.jdbcType},
+            </if>
+        #end
+        #end
+        </set>
+        #foreach($field in ${table.fields})
+        #if(${field.keyFlag})
+        where $!field.name = #{$!field.propertyName,jdbcType=$!field.metaInfo.jdbcType}
+        #end
+        #end
+    </update>
+
+    <!--根据ID删除-->
+    <delete id="deleteRecord" parameterType="java.lang.String">
+        delete from $!table.name
+        #foreach($field in ${table.fields})
+        #if(${field.keyFlag})
+        where $!field.name = #{$!field.propertyName,jdbcType=$!field.metaInfo.jdbcType}
+        #end
+        #end
+    </delete>
+
+    <!--根据ID查询-->
+    <select id="findById" resultMap="BaseResultMap">>
+        select <include refid="Base_Column_List" />
+        from $!table.name
+        #foreach($field in ${table.fields})
+        #if(${field.keyFlag})
+        where $!field.name = #{$!field.propertyName,jdbcType=$!field.metaInfo.jdbcType}
+        #end
+        #end
+    </select>
 </mapper>

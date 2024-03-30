@@ -22,5 +22,32 @@ interface ${table.mapperName} : ${superMapperClass}<${entity}>
 #else
 public interface ${table.mapperName} #if(${superMapperClass})extends ${superMapperClass}<${entity}> #end{
 
+    /**
+     * 新增
+     * @param record $!{table.comment}对象
+     * @return 影响行数
+     */
+    int insertRecord(${entity} record);
+
+    /**
+     * 根据ID更新
+     * @param record $!{table.comment}对象
+     * @return 影响行数
+     */
+    int updateRecord(${entity} record);
+
+    /**
+     * 根据ID删除
+     * @param id $!{table.comment}ID
+     * @return 影响行数
+     */
+    int deleteRecord(String id);
+
+    /**
+     * 根据ID查询
+     * @param id $!{table.comment}ID
+     * @return $!{table.comment}对象
+     */
+    ${entity} selectById(String id);
 }
 #end

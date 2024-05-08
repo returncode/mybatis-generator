@@ -74,7 +74,7 @@
     </delete>
 
     <!--根据ID查询-->
-    <select id="selectById" resultMap="BaseResultMap">>
+    <select id="selectById" resultMap="BaseResultMap">
         select <include refid="Base_Column_List" />
         from $!table.name
         #foreach($field in ${table.fields})
